@@ -1,0 +1,73 @@
+{
+  "name": "seive.ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r dotenv/config dist/index.js",
+    "start:server": "babel-node -r dotenv/config src/index.js",
+    "watch:client": "cd ../client && yarn start",
+    "watch:server": "nodemon --exec babel-node -r dotenv/config src/index.js",
+    "dev": "concurrently \"yarn watch:server\" \"yarn watch:client\"",
+    "prod": "yarn build:client && cross-env NODE_ENV=production yarn watch:server",
+    "build:client": "cd client && yarn build",
+    "build:server": "babel server --out-dir dist",
+    "build": "yarn build:client && yarn build:server",
+    "heroku-prebuild": "cd client && yarn install --dev",
+    "heroku-postbuild": "yarn build",
+    "clean": "rimraf node_modules",
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint \"**/*.js\" --fix",
+    "format": "prettier \"**/*.{js,jsx,css}\" --write",
+    "format:staged": "pretty-quick --staged",
+    "lf": "yarn lint && yarn format"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohitbakoliya/seive.ai.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rohitbakoliya/seive.ai/issues"
+  },
+  "homepage": "https://github.com/rohitbakoliya/seive.ai#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-status-codes": "^2.1.4",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.0",
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
+    "babel-eslint": "^10.1.0",
+    "babel-register": "^6.26.0",
+    "concurrently": "^6.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "nodemon": "^2.0.8",
+    "prettier": "^2.3.2",
+    "pretty-quick": "^3.1.1",
+    "rimraf": "^3.0.2"
+  }
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 // @ts-ignore
-import test from './test.pdf';
+import test from 'assets/test.pdf';
 
 const PdfViewer: React.FC = () => {
   const [numPages, setNumPages] = useState<number | null>(null);
