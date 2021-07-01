@@ -1,16 +1,24 @@
 import React from 'react';
 import { Router } from 'react-router';
 import MainRouter from 'routes/routes';
+import { Provider as StoreProvider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
 import { history } from 'utils/history';
 import GlobalStyles from './styles/global';
+import { store } from 'store';
+import theme from 'config/theme'
 
 const App = () => {
   return (
     <React.Fragment>
-      <Router history={history}>
-        <MainRouter />
-        <GlobalStyles />
-      </Router>
+      <StoreProvider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <MainRouter />
+            <GlobalStyles />
+          </Router>
+        </ThemeProvider>
+      </StoreProvider>
     </React.Fragment>
   );
 };

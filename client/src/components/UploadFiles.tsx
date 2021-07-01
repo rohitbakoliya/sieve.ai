@@ -1,6 +1,7 @@
 import React from 'react';
 import { Upload, UploadProps } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
 
 const { Dragger } = Upload;
 
@@ -18,17 +19,23 @@ const defaultProps: UploadProps = {
   },
 };
 
+const UploadFilesWrapper = styled.div`
+  width: 100%;
+`;
+
 const UploadFiles: React.FC<UploadProps> = props => {
   return (
-    <Dragger {...props}>
-      <p className="ant-upload-drag-icon">
-        <CloudUploadOutlined />
-        <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Only .pdf or .doc file formats are allowed
+    <UploadFilesWrapper>
+      <Dragger {...props}>
+        <p className="ant-upload-drag-icon">
+          <CloudUploadOutlined />
+          <p className="ant-upload-text">Click or drag file to this area to upload</p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload. Only .pdf or .doc file formats are allowed
+          </p>
         </p>
-      </p>
-    </Dragger>
+      </Dragger>
+    </UploadFilesWrapper>
   );
 };
 
