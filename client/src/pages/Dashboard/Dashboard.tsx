@@ -1,5 +1,5 @@
 import React from 'react';
-import UploadSteps from 'components/UploadSteps';
+import UploadSteps from 'components/UploadSteps/UploadSteps';
 import { DashboardWrapper, UploadStepsContainer } from './Dashboard.style';
 import Layout from 'layout/Layout';
 
