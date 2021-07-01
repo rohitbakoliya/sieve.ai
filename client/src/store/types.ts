@@ -1,7 +1,8 @@
-import { AuthReducerState } from './ducks/auth';
+import { AuthReducerState, IStepsContent } from './ducks';
 
 export interface StoreState {
   auth: AuthReducerState;
+  stepsContent: IStepsContent;
   loading: {
     [x: string]: boolean;
   };

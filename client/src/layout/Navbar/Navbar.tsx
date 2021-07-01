@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
         <NavLink to="/" exact>
           Home
         </NavLink>
-        <NavLink to="/dashboard">Dashboard</NavLink>
+        {isAuthenticated && <NavLink to="/dashboard">Dashboard</NavLink>}
         <Button type="link" size="large" onClick={handleClick}>
           {isAuthenticated ? 'Logout' : 'Login'}
         </Button>

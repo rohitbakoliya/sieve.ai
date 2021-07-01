@@ -3,17 +3,18 @@ import React from 'react';
 import styled from 'styled-components';
 import UploadFiles from './UploadFiles';
 import JdTextArea from './JdTextarea';
+import TagsGroup from './TagsGroup';
 
 const { Step } = Steps;
 
 const steps = [
   {
-    title: 'Add Job Description',
+    title: 'Paste Job Description',
     content: <JdTextArea />,
   },
   {
-    title: 'Add Tags',
-    content: '<ADdJR />',
+    title: 'Add relevant Tags',
+    content: <TagsGroup />,
   },
   {
     title: 'Upload Resumes',
