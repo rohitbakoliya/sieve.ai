@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 
-export const DashboardWrapper = styled.section`
+export const LoginWrapper = styled.div`
   height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 `;
 
-export const UploadStepsContainer = styled.div`
-  padding: 30px 40px;
-  width: 80%;
-  align-items: center;
+export const FormsContainer = styled.div`
+  width: 450px;
+  padding: 50px;
   background-color: ${p => p.theme.colors.offwhite};
   box-shadow: ${p => p.theme.shadows.small};
 `;

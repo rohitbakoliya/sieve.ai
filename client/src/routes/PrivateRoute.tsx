@@ -5,6 +5,7 @@ import { StoreState } from 'store';
 
 const PrivateRoute: React.FC<RouteProps> = ({ ...props }) => {
   const isAuthenticated = useSelector((state: StoreState) => state.auth.isAuthenticated);
+  console.log(isAuthenticated);
   const checkingAuthStatus = useSelector((state: StoreState) => state.loading['auth/CHECK_AUTH']);
   // https://stackoverflow.com/a/56175010/11922517
 

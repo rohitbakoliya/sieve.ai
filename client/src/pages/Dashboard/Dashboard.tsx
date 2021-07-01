@@ -1,14 +1,17 @@
 import React from 'react';
-import UploadFiles from 'components/UploadFiles';
-import PdfViewer from 'components/PdfViewer';
-import { DashboardWrapper } from './Dashboard.style';
+import UploadSteps from 'components/UploadSteps';
+import { DashboardWrapper, UploadStepsContainer } from './Dashboard.style';
+import Layout from 'layout/Layout';
 
 const Dashboard: React.FC<{}> = () => {
   return (
-    <DashboardWrapper>
-      {/* <UploadFiles /> */}
-      <PdfViewer />
-    </DashboardWrapper>
+    <Layout>
+      <DashboardWrapper>
+        <UploadStepsContainer>
+          <UploadSteps />
+        </UploadStepsContainer>
+      </DashboardWrapper>
+    </Layout>
   );
 };
 export default Dashboard;

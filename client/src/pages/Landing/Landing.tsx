@@ -1,12 +1,14 @@
 import React from 'react';
-import GoogleButton from 'components/GoogleButton';
 import { LandingWrapper } from './Landing.style';
+import Layout from 'layout/Layout';
 
 const LandingPage: React.FC<{}> = () => {
   return (
-    <LandingWrapper>
-      <GoogleButton />
-    </LandingWrapper>
+    <Layout>
+      <LandingWrapper>
+        Landin Page UI
+      </LandingWrapper>
+    </Layout>
   );
 };
 export default LandingPage;

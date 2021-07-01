@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { history } from 'utils/history';
 import GlobalStyles from './styles/global';
 import { store } from 'store';
-const theme = {};
+import theme from 'config/theme'
 
 const App = () => {
   return (

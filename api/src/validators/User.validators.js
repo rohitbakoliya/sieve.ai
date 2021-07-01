@@ -19,7 +19,7 @@ export const validateUserSignup = user => {
     name: nameValidator,
     email: emailValidator,
     password: passwordValidator,
-    confirmPassword: passwordValidator.valid(Joi.ref('password')),
+    // confirmPassword: passwordValidator.valid(Joi.ref('password')),
     createdAt: Joi.date().default(Date.now),
   });
   return SignupSchema.validate(user);

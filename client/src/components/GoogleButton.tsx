@@ -30,15 +30,11 @@ const GoogleButton = () => {
   };
 
   return (
-    <Button
-      icon={<GoogleOutlined />}
-      onClick={initOAuthWindow}
-      shape="round"
-      size="large"
-      type="primary"
-    >
-      Login With Google
-    </Button>
+    <div style={{ textAlign: 'center' }}>
+      <Button icon={<GoogleOutlined />} onClick={initOAuthWindow} type="primary">
+        Continue With Google
+      </Button>
+    </div>
   );
 };
 export default GoogleButton;

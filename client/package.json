@@ -19,6 +19,7 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-sticky-el": "^2.0.9",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
@@ -55,6 +56,7 @@
   "devDependencies": {
     "@types/react-pdf": "^5.0.4",
     "@types/react-router-dom": "^5.1.7",
+    "@types/react-sticky-el": "^1.0.2",
     "@types/redux": "^3.6.0",
     "@types/redux-logger": "^3.0.8",
     "@types/redux-thunk": "^2.1.0",

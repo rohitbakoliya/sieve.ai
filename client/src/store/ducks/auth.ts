@@ -78,7 +78,7 @@ export const signupUser = (formData: any): ApiAction => ({
   },
 });
 
-export const loginUser = (formData: { uoe: string; password: string }): ApiAction => ({
+export const loginUser = (formData: { email: string; password: string }): ApiAction => ({
   type: API,
   payload: {
     method: 'POST',

@@ -26,12 +26,12 @@ export const generateToken = (req, res) => {
 const OAuthSuccessPage = `
 <html>
   <head>
-    <title>Seive.ai</title>
+    <title>Sieve.ai</title>
   </head>
   <body>
     <p>Successfully Authorized!</p>
     <script>
-      // window.onload = window.close();
+        window.onload = window.close();
         let originUrl = window.location.origin;
         if (window.location.hostname === 'localhost') {
           originUrl = 'http://localhost:3000'
