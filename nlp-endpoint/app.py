@@ -29,7 +29,7 @@ def process_save_tags():
 
 
 ###### UPLOAD CV SECTION #########
-@app.route('/upload', methods = ['POST'])
+@app.route('/upload/single', methods = ['POST'])
 def upload_file():
    if request.method == 'POST':
       f = request.files['file']
@@ -37,6 +37,13 @@ def upload_file():
       return 'file uploaded successfully'
    else:
         return "Wrong form method"
+
+@app.route('/upload/multi', methods = ['POST'])
+def upload():
+    files = request.files.getlist("file")
+    for file in files:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+    return 'uploaded files'
 
 
 ###### PREPROCESSING SECTION ######
@@ -48,4 +55,4 @@ def hello_world():
    return ("Hello World")
 
 if __name__ == '__main__':
-   app.run(debug = "True")
+   app.run(debug = "True", port=5002)
