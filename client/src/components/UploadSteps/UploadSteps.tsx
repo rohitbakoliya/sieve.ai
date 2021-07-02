@@ -62,7 +62,7 @@ const UploadSteps: React.FC = () => {
         )}
         {current === steps.length - 1 && (
           <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
+            View Results
           </Button>
         )}
         {current > 0 && (

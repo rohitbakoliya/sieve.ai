@@ -9,7 +9,11 @@ const defaultProps: UploadProps = {
   accept: '.pdf,application/pdf',
   multiple: true,
   maxCount: 100,
+  withCredentials: true,
+  name: 'resume',
+  data: { a: 'apple', b: 'ball' },
   beforeUpload: file => {
+    console.log('in beforeUpload', file);
     const isPDF = file.type === 'pdf' || file.type === 'application/pdf';
     if (!isPDF) {
       message.error('You can only upload PDF files!');
@@ -20,15 +24,15 @@ const defaultProps: UploadProps = {
     }
     return isPDF && isLt2M;
   },
-  // action: 'https://run.mocky.io/v3/b5372f71-f81f-47eb-961c-acc25d6cacb9',
-  customRequest: options => {
-    console.log(options);
-  },
+  action: 'http://localhost:5000/api/upload',
+  // customRequest: options => {
+  //   console.log('in CustomRequest', options);
+  // },
   onChange({ file, fileList }) {
     if (file.status !== 'uploading') {
       console.log(file, fileList);
     }
-    console.log(file, fileList);
+    console.log('in onChange', file, fileList);
   },
 };
 
