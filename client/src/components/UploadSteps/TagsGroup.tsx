@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreState } from 'store';
 import { Tag, Input, Tooltip } from 'antd';
@@ -34,8 +34,8 @@ const TagsGroupWrapper = styled.div`
 const TagsGroup: React.FC = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state: StoreState) => state.stepsContent.tags);
-  const inputRef = useRef<Input | null>(null);
-  const editInputRef = useRef<Input | null>(null);
+  let inputRef: Input | null;
+  let editInputRef: Input | null;
   const [state, setState] = useState({
     inputVisible: false,
     inputValue: '',
@@ -49,8 +49,9 @@ const TagsGroup: React.FC = () => {
   };
 
   const showInput = () => {
+    console.log('showInput', inputRef);
+    inputRef?.focus();
     setState(_prev => ({ ..._prev, inputVisible: true }));
-    inputRef.current?.focus();
   };
 
   const handleInputChange = e => {
@@ -88,16 +89,25 @@ const TagsGroup: React.FC = () => {
       };
     });
   };
+  const saveInputRef = input => {
+    if (input) inputRef = input;
+    console.log('inside saveInputRef', inputRef);
+  };
+
+  const saveEditInputRef = input => {
+    editInputRef = input;
+  };
 
   const { inputVisible, inputValue, editInputIndex, editInputValue } = state;
 
   return (
     <TagsGroupWrapper>
+      {console.log(inputRef!, editInputRef!)}
       {tags.map((tag, index) => {
         if (editInputIndex === index) {
           return (
             <Input
-              ref={editInputRef}
+              ref={saveEditInputRef}
               key={tag}
               size="middle"
               className="tag-input"
@@ -113,9 +123,10 @@ const TagsGroup: React.FC = () => {
           <Tag className="edit-tag" key={tag} onClose={() => handleClose(tag)}>
             <span
               onDoubleClick={e => {
+                console.log('from duble click', editInputRef!);
+                editInputRef?.focus();
                 console.log('clicked');
                 setState(_prev => ({ ..._prev, editInputIndex: index, editInputValue: tag }));
-                editInputRef.current?.focus();
                 e.preventDefault();
               }}
             >
@@ -136,7 +147,7 @@ const TagsGroup: React.FC = () => {
       <br />
       {inputVisible && (
         <Input
-          ref={inputRef}
+          ref={saveInputRef}
           type="text"
           size="middle"
           className="site-tag-input"

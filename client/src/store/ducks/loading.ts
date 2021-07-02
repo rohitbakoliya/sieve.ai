@@ -1,19 +1,17 @@
 import { IAction } from 'store/types';
-import { CLEAR_ALL_ERRORS } from '.';
 
 const reducer = (state = {}, action: IAction) => {
-  const { type, payload } = action;
-  if (type === CLEAR_ALL_ERRORS) return {};
-  const matches = type.match(/(.*)_(REQUEST|FAILURE)/);
+  const { type } = action;
+  const matches = type.match(/(.*)_(REQUEST|SUCCESS|FAILURE)/);
 
-  // ignore if action type is not *_REQUEST or *_FAILURE
+  // not a *_REQUEST / *_SUCCESS /  *_FAILURE actions, so we ignore them
   if (!matches) return state;
   const [, requestName, requestState] = matches;
   return {
     ...state,
-    // add error message when *_FAILURE occurs
-    // otherwise clear error
-    [requestName]: requestState === 'FAILURE' ? payload : '',
+    // Store whether a request is happening at the moment or not
+    // e.g. will be true when receiving *_REQUEST
+    [requestName]: requestState === 'REQUEST',
   };
 };
 export default reducer;

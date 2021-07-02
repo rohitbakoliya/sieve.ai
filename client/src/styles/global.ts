@@ -37,14 +37,16 @@ const GlobalStyles = createGlobalStyle`
     font-weight: inherit;
   }
 
-  p,a {
+  p {
     font-size: 16px;
   }
 
   a {
     text-decoration: none;
-    line-height: 1.5em;
-    color: ${p => p.theme.colors.black};
+    color: ${p => p.theme.colors.secondary};
+    &:hover{
+      color: ${p => p.theme.colors.primary};
+    }
   }
 `;
 
