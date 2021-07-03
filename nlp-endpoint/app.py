@@ -1,18 +1,14 @@
+import yake
 from spacy.matcher import PhraseMatcher
 from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
-
 from gensim.models import Word2Vec
-import string
-import re
 import PyPDF2
 import json
-import collections
 from os import listdir
 from os.path import isfile, join
-from io import StringIO
 import pandas as pd
 from collections import Counter
 import en_core_web_sm
@@ -22,6 +18,26 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'
+
+
+###### JOB DESCRIPTION SECTION ####
+@app.route("/save_jd", methods=['POST'])
+def process_save_jd():
+    my_jd = request.get_json()['job_desc']
+    jobtxt = my_jd.replace("\n", " ")
+    language = "en"
+    max_ngram_size = 3
+    deduplication_threshold = 0.9
+    numofkeywords = 20
+    custom_kw_extractor = yake.KeywordExtractor(
+        lan=language, n=max_ngram_size, dedupLim=deduplication_threshold, top=numofkeywords, features=None)
+
+    keywords = custom_kw_extractor.extract_keywords(jobtxt)
+    res = ''
+    for kw in keywords:
+        (a, b) = kw
+        res = res + a + ', '
+    return res
 
 
 ###### PREPROCESSING SECTION ######
@@ -34,11 +50,8 @@ def pdfextract(file):
         pageObj = fileReader.getPage(count)
         count += 1
         t = pageObj.extractText()
-        # print (t)
         text.append(t)
     return text
-
-# all custom keywords should be in lower case
 
 
 def find_score(file, setKeywords, customKeywords):
@@ -65,7 +78,6 @@ def find_score(file, setKeywords, customKeywords):
     matcher.add('CustomKeywords', None, *Customkeys)
     doc = nlp(resume)
     matches = matcher(doc)
-   #  print(matches)
 
     # The following is not required but additional data of the score can be obtained with the dataframe
     KEYS = []
@@ -81,9 +93,8 @@ def find_score(file, setKeywords, customKeywords):
     sum = len(matches)
     return df.to_string()
 
+
 ###### SAVE TAGS SECTION ##########
-
-
 def save_tags(tags):
     res = []
     tags = tags.split(",")
@@ -112,6 +123,7 @@ def upload():
     return 'upload successful'
 
 
+###### FINAL PROCESS SECTION #########
 @app.route('/process', methods=['GET'])
 def show_result():
     files = os.listdir(app.config['UPLOAD_FOLDER'])
