@@ -1,0 +1,8 @@
+Flask_Cors==3.0.10
+gensim==4.0.1
+spacy==3.0.6
+pandas==1.2.5
+Werkzeug==2.0.1
+en_core_web_sm==3.0.0
+Flask==2.0.1
+PyPDF2==1.26.0

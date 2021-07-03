@@ -6,12 +6,12 @@
 }
 
 #home-left {
+  margin-top: 12em;
   display: inline-block;
   width: 40%;
   vertical-align: top;
   text-align: left !important;
-  margin-right: 2em;
-  padding-left: 4em;
+  padding-left: 7em;
 }
 
 #home-left h1 {
@@ -24,15 +24,10 @@
   border-bottom: 1px #486494 !important;
 }
 
-#home-left h2 {
+#home-left p {
   color: #d1e0f1;
   font-size: 1em;
   letter-spacing: 1.4px;
   font-weight: 300;
   line-height: 2em;
-}
-
-.top-subtitle {
-  margin-top: 1.7em;
-  margin-bottom: 2em;
 }
