@@ -19,7 +19,7 @@ import en_core_web_sm
 nlp = en_core_web_sm.load()
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app,supports_credentials = True, resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
 
 app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'
 

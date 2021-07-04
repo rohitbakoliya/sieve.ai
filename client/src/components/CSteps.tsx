@@ -30,6 +30,7 @@ interface ICSteps {
 
 const CSteps: React.FC<ICSteps> = ({ steps }) => {
   const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const prev = () => {
@@ -37,13 +38,25 @@ const CSteps: React.FC<ICSteps> = ({ steps }) => {
   };
 
   const handleNextAction = async () => {
-    await steps[current].action();
-    setCurrent(current + 1);
+    try {
+      setLoading(true);
+      await steps[current].action();
+      setLoading(false);
+      setCurrent(current + 1);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleFinalAction = async () => {
-    const { location } = steps[current].action();
-    history.push(location);
+    try {
+      setLoading(true);
+      const { location } = await steps[current].action();
+      setLoading(false);
+      history.push(location);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -56,17 +69,22 @@ const CSteps: React.FC<ICSteps> = ({ steps }) => {
       <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={handleNextAction}>
+          <Button loading={loading} disabled={loading} type="primary" onClick={handleNextAction}>
             Next
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={handleFinalAction}>
+          <Button loading={loading} disabled={loading} type="primary" onClick={handleFinalAction}>
             View Results
           </Button>
         )}
         {current > 0 && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+          <Button
+            loading={loading}
+            disabled={loading}
+            style={{ margin: '0 8px' }}
+            onClick={() => prev()}
+          >
             Previous
           </Button>
         )}

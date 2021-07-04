@@ -1,15 +1,15 @@
 import CSteps, { ICStep } from 'components/CSteps';
-import JdTextArea from './JdTextarea';
+import JobMeta from './JobMeta';
 import UploadFiles from './UploadFiles';
-import TagsGroup from './TagsGroup';
-import { JdTextareaAction, UploadFileAction, TagsGroupAction} from './NextActions';
+import TagsGroup from './TagsGroup/TagsGroup';
+import { JobMetaAction, UploadFileAction, TagsGroupAction } from './NextActions';
 
 // action is just function when next is being clicked
 const steps: ICStep[] = [
   {
     title: 'Paste Job Description',
-    content: <JdTextArea />,
-    action: JdTextareaAction,
+    content: <JobMeta />,
+    action: JobMetaAction,
   },
   {
     title: 'Add relevant Tags',

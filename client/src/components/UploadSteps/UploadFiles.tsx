@@ -2,6 +2,9 @@ import React from 'react';
 import { message, Upload, UploadProps } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import { store } from 'store';
+import { addResume } from 'store/ducks';
+import { SERVER_URL } from 'config';
 
 const { Dragger } = Upload;
 
@@ -9,11 +12,10 @@ const defaultProps: UploadProps = {
   accept: '.pdf,application/pdf',
   multiple: true,
   maxCount: 100,
+  // directory: true,
   withCredentials: true,
   name: 'resume',
-  data: { a: 'apple', b: 'ball' },
   beforeUpload: file => {
-    console.log('in beforeUpload', file);
     const isPDF = file.type === 'pdf' || file.type === 'application/pdf';
     if (!isPDF) {
       message.error('You can only upload PDF files!');
@@ -24,16 +26,12 @@ const defaultProps: UploadProps = {
     }
     return isPDF && isLt2M;
   },
-  action: 'http://localhost:5000/api/upload',
-  // customRequest: options => {
-  //   console.log('in CustomRequest', options);
-  // },
-  onChange({ file, fileList }) {
-    if (file.status !== 'uploading') {
-      console.log(file, fileList);
+  onChange({ file }) {
+    if (file.status === 'done') {
+      store.dispatch(addResume(file.response.filename));
     }
-    console.log('in onChange', file, fileList);
   },
+  action: `${SERVER_URL}/api/upload`,
 };
 
 const UploadFilesWrapper = styled.div`
