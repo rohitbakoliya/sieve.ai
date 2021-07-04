@@ -1,16 +1,17 @@
-import { Table } from 'antd';
+import { message, Progress, Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import useFetch from 'hooks/useFetch';
 import Layout from 'layout/Layout';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ResultsWrapper, RTableContainer } from './Results.style';
 
 interface RecordType {
   name: string;
   email: string;
   score: number;
-  link: string;
+  resumeId: string;
+  _key: number;
 }
 
 const dataSource = [
@@ -18,19 +19,22 @@ const dataSource = [
     name: 'rohit',
     email: 'email@gmail.com',
     score: 40,
-    link: '/#',
+    resumeId: '/#',
+    _key: 121,
   },
   {
     name: 'john',
     email: 'email@gmail.com',
     score: 70,
-    link: '/#',
+    resumeId: '/#',
+    _key: 122,
   },
   {
     name: 'foo bar',
     email: 'foobar@yahoo.com',
     score: 96,
-    link: '/#',
+    resumeId: '/#',
+    _key: 123,
   },
 ];
 
@@ -52,12 +56,18 @@ const columns: ColumnsType<RecordType> = [
     key: 'score',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.score - b.score,
+    render: (_, r) => <Progress percent={r.score} />,
+    width: 350,
   },
   {
-    title: 'Action',
-    dataIndex: 'action',
+    title: 'Actions',
+    dataIndex: 'actions',
     render: (_, r) => {
-      return <a href={r.link}> View Resume </a>;
+      return (
+        <Link to={{ pathname: `/result?rid=${r.resumeId}`, state: { data: r } }}>
+          View Complete Result
+        </Link>
+      );
     },
   },
 ];
@@ -65,24 +75,31 @@ const columns: ColumnsType<RecordType> = [
 const Leaderboard: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
   const URL = `/api/jobs/${jobId}/results`;
-  const [results] = useFetch(URL);
+  const [results, isLoading, error] = useFetch(URL);
   const [data, setData] = useState([]);
 
   useEffect(() => {
     if (!results) return;
     console.log(results);
-    const resultsArray = results.map(result => {
-      // TODO: add req fields
-      return {};
+    const resultsArray = results.map((result, idx) => {
+      const {
+        userInfo: { name, email },
+        score,
+        resumeId,
+      } = result;
+
+      return { name, email, score, resumeId, _key: idx };
     });
     setData(resultsArray);
   }, [results]);
+
+  error && message.error(error);
 
   return (
     <Layout>
       <ResultsWrapper>
         <RTableContainer>
-          <Table columns={columns} dataSource={dataSource} rowKey={r => r.link} />
+          <Table columns={columns} loading={isLoading} dataSource={data} rowKey={r => r._key} />
         </RTableContainer>
       </ResultsWrapper>
     </Layout>
