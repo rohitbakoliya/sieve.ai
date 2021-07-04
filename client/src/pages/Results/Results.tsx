@@ -15,30 +15,6 @@ interface RecordType {
   data: any;
 }
 
-const dataSource = [
-  {
-    name: 'rohit',
-    email: 'email@gmail.com',
-    score: 40,
-    resumeId: '/#',
-    _key: 121,
-  },
-  {
-    name: 'john',
-    email: 'email@gmail.com',
-    score: 70,
-    resumeId: '/#',
-    _key: 122,
-  },
-  {
-    name: 'foo bar',
-    email: 'foobar@yahoo.com',
-    score: 96,
-    resumeId: '/#',
-    _key: 123,
-  },
-];
-
 const columns: ColumnsType<RecordType> = [
   {
     title: 'Name',
@@ -66,7 +42,7 @@ const columns: ColumnsType<RecordType> = [
     render: (_, r) => {
       return (
         <Tag color="geekblue" key={r.resumeId}>
-          {r.data.predicted}
+          {r.data.userInfo.predicted}
         </Tag>
       );
     },

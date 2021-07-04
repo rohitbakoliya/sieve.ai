@@ -28,11 +28,7 @@ const JobSchema = new mongoose.Schema(
     processed: { type: Boolean, default: false },
     results: [
       {
-        userInfo: {
-          email: String,
-          phone: String,
-          name: String,
-        },
+        userInfo: Object,
         score: {
           type: Number,
           min: 0,
