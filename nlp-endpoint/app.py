@@ -1,30 +1,34 @@
-# base imports
-from flask import Flask, request
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
-import os
-import json
-
-# model imports
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import textract
 from itertools import chain
-from spacy.matcher import PhraseMatcher
+from resume_parser import resumeparse
+from flask import Flask, request
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
+import json
 import string
+import re
 import os
-import pandas as pd
-from collections import Counter
+from joblib import load
+import pickle
 import en_core_web_sm
 nlp = en_core_web_sm.load()
 nltk.download('punkt')
 nltk.download('stopwords')
 
+nlp = en_core_web_sm.load()
+nltk.download('punkt')
+nltk.download('stopwords')
+
+
 app = Flask(__name__)
-cors = CORS(app,supports_credentials = True, resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
+cors = CORS(app, supports_credentials=True, resources={
+            r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
 
 # cv folder
 app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'
@@ -79,9 +83,22 @@ def upload():
 ###### NLP MODEL SECTION #############
 
 
+def cleanResume(resumeText):
+    resumeText = re.sub('http\S+\s*', ' ', resumeText)
+    resumeText = re.sub('RT|cc', ' ', resumeText)
+    resumeText = re.sub('#\S+', '', resumeText)
+    resumeText = re.sub('@\S+', '  ', resumeText)
+    resumeText = re.sub('[%s]' % re.escape(
+        """!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""), ' ', resumeText)
+    resumeText = re.sub(r'[^\x00-\x7f]', r' ', resumeText)
+    resumeText = re.sub('\s+', ' ', resumeText)
+    return resumeText
+
+
 def Preprocessfile(filename):
     text = textract.process(filename)
     text = text.decode('utf-8').replace("\\n", " ")
+    # print(text)
     x = []
     tokens = word_tokenize(text)
     tok = [w.lower() for w in tokens]
@@ -91,60 +108,58 @@ def Preprocessfile(filename):
     stop_words = set(stopwords.words('english'))
     words = [w for w in words if not w in stop_words]
     x.append(words)
+    # print(x)
     res = " ".join(chain.from_iterable(x))
     return res
 
 
-def find_score(jobdes, filename, setKeywords, customKeywords, df):
+def predictResume(filename):
+    text = textract.process(filename)
+    text = text.decode('utf-8').replace("\\n", " ")
+    text = cleanResume(text)
+    text = [text]
+    text = np.array(text)
+    vectorizer = pickle.load(open("backend algorithm/vectorizer.pickle", "rb"))
+    resume = vectorizer.transform(text)
+    model = load('backend algorithm/model.joblib')
+    result = model.predict(resume)
+    labeldict = {
+        0: 'Arts',
+        1: 'Automation Testing',
+        2: 'Operations Manager',
+        3: 'DotNet Developer',
+        4: 'Civil Engineer',
+        5: 'Data Science',
+        6: 'Database',
+        7: 'DevOps Engineer',
+        8: 'Business Analyst',
+        9: 'Health and fitness',
+        10: 'HR',
+        11: 'Electrical Engineering',
+        12: 'Java Developer',
+        13: 'Mechanical Engineer',
+        14: 'Network Security Engineer',
+        15: 'Blockchain ',
+        16: 'Python Developer',
+        17: 'Sales',
+        18: 'Testing',
+        19: 'Web Designing'
+    }
+    return labeldict[result[0]]
+
+
+def find_score(jobdes, filename, customKeywords):
     resume = Preprocessfile(filename)
     customKeywords = ' '.join(customKeywords)
     jobdes = jobdes + ' ' + customKeywords
     text = [resume, jobdes]
     cv = CountVectorizer()
     count_matrix = cv.fit_transform(text)
-    # print(cosine_similarity(count_matrix))
+    print(cosine_similarity(count_matrix))
     matchpercent = cosine_similarity(count_matrix)[0][1]*100
     matchpercent = round(matchpercent, 2)
-    # print(matchpercent)
-    length = len(setKeywords)  # need to add more keywords and improve model
-    Dict = {
-        'Data Science': 'datascience',
-        'Machine Learning': 'machinelearning',
-        'Web Development': 'webdev',
-        'Human resources': 'hr',
-        'App Development': 'appdev'
-    }
-    keyword = []
-    for i in range(0, length):
-        keyword.append([nlp(resume)
-                       for resume in df[Dict[setKeywords[i]]].dropna(axis=0)])
-    matcher = PhraseMatcher(nlp.vocab)
-    for i in range(0, length):
-        matcher.add(Dict[setKeywords[i]], None, *keyword[i])
-    doc = nlp(resume)
-    matches = matcher(doc)
-    # print(matches)
-    # The following is not required but additional data of the score can be obtained with the dataframe
-    KEYS = []
-    WORDS = []
-    for match_id, start, end in matches:
-        keys = nlp.vocab.strings[match_id]
-        words = doc[start: end]
-        # print(f'{keys}  {words}')
-        KEYS.append(keys)
-        WORDS.append(words)
-    DF = pd.DataFrame(KEYS, columns=['Type'])
-    DF['Keyword'] = WORDS
-    # print(DF)
-    result = {
-        'score': matchpercent,
-        'totalmatches': len(matches)
-    }
-    for i in range(0, length):
-        result[setKeywords[i]] = len(
-            DF.loc[DF['Type'] == Dict[setKeywords[i]]])
-
-    return result
+    print(matchpercent)
+    return matchpercent
 
 ######################################
 
@@ -153,12 +168,14 @@ def find_score(jobdes, filename, setKeywords, customKeywords, df):
 
 @app.route('/process', methods=['GET'])
 def show_result():
+    my_profile = request.get_json()['profile']
+    filtered_files = []
     files = os.listdir(app.config['UPLOAD_FOLDER'])
+    for file in files:
+        if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], file)) in my_profile:
+            filtered_files.append(file)
 
     jobdes = Preprocessfile(os.path.join('../assets/', 'jobdesc.txt'))
-
-    df = pd.read_csv('setkeywords.csv')
-    setKeywords = ['Data Science', 'Machine Learning']
 
     # customKeywords = ['spanish', 'hindi', 'opencv']
     my_tags = request.get_json()['tags']
@@ -168,10 +185,17 @@ def show_result():
         temp = tag.strip()
         customKeywords.append(temp)
 
-    res = dict()
-    for file in files:
-        res[file] = find_score(jobdes, os.path.join(
-            app.config['UPLOAD_FOLDER'], file), setKeywords, customKeywords, df)
+    res = list()
+    for file in filtered_files:
+        score = find_score(jobdes, os.path.join(
+            app.config['UPLOAD_FOLDER'], file), customKeywords)
+        user_info = resumeparse.read_file(file)
+        res.append({
+            'resumeId': file,
+            'score': score,
+            'userInfo': user_info
+        })
+
     j_res = json.dumps(res)
     return j_res
 
