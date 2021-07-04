@@ -29,17 +29,18 @@ const JobSchema = new mongoose.Schema(
     processed: { type: Boolean, default: false },
     results: [
       {
-        name: String,
-        email: String,
+        userInfo: {
+          email: String,
+          phone: String,
+          name: String,
+        },
         score: {
           type: Number,
           min: 0,
           max: 100,
         },
-        resume: {
-          link: String,
-          rid: String,
-        },
+        resumeId: String,
+        tagsScore: Object,
       },
     ],
     createdAt: {

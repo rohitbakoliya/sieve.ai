@@ -1,7 +1,9 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import useFetch from 'hooks/useFetch';
 import Layout from 'layout/Layout';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { ResultsWrapper, RTableContainer } from './Results.style';
 
 interface RecordType {
@@ -61,12 +63,26 @@ const columns: ColumnsType<RecordType> = [
 ];
 
 const Leaderboard: React.FC = () => {
-  const data = dataSource;
+  const { jobId } = useParams<{ jobId: string }>();
+  const URL = `/api/jobs/${jobId}/results`;
+  const [results] = useFetch(URL);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (!results) return;
+    console.log(results);
+    const resultsArray = results.map(result => {
+      // TODO: add req fields
+      return {};
+    });
+    setData(resultsArray);
+  }, [results]);
+
   return (
     <Layout>
       <ResultsWrapper>
         <RTableContainer>
-          <Table columns={columns} dataSource={data} />
+          <Table columns={columns} dataSource={dataSource} rowKey={r => r.link} />
         </RTableContainer>
       </ResultsWrapper>
     </Layout>

@@ -1,5 +1,5 @@
 import { store } from 'store';
-import { getResults, getTagsSuggestion } from 'store/ducks';
+import { createJob, getTagsSuggestion } from 'store/ducks';
 
 // action handlers
 export const JobMetaAction = async () => {
@@ -22,7 +22,7 @@ export const UploadFileAction = async () => {
     resumes,
     tags: [...suggestedTags, ...tags],
   };
-  const { id } = await store.dispatch(getResults(payload));
+  const { id } = await store.dispatch(createJob(payload));
   return {
     location: `/results/${id}`,
   };
