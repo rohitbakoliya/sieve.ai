@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { CenterContainer, DashboardWrapper } from './Dashboard.style';
 import Layout from 'layout/Layout';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Table, Tag } from 'antd';
+import { Button, Table, Tag, Typography } from 'antd';
 import useFetch from 'hooks/useFetch';
+
+const { Text } = Typography;
 
 const columns = [
   {
@@ -24,6 +26,11 @@ const columns = [
     title: 'Job Description',
     key: 'jd',
     dataIndex: 'jd',
+    render: jd => (
+      <Text ellipsis={true} style={{ width: '250px' }}>
+        {jd}
+      </Text>
+    ),
   },
   {
     title: 'Total Candidates',

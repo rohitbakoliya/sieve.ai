@@ -84,7 +84,9 @@ def cleanResume(resumeText):
 
 
 def Preprocessfile(filename):
-    text = textract.process(filename)
+    text = filename
+    if ".pdf" in filename:
+        text = textract.process(filename)
     text = text.decode('utf-8').replace("\\n", " ")
     # print(text)
     x = []
@@ -162,20 +164,16 @@ def show_result():
     my_tags = request.get_json()['tags']
     my_jd = request.get_json()['jd']
 
-    with open(os.path.join('../assets/', 'jobdesc.txt'), 'w') as f:
-        f.write(str(my_jd))
 
     filtered_files = []
     for resume in resumes:
-        print(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume))
-        # if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume)) in my_profile:
-        #     filtered_files.append(resume)
+        if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume)) in my_profile:
+            filtered_files.append(resume)
 
-    jobdes = Preprocessfile(os.path.join('../assets/', 'jobdesc.txt'))
+    jobdes = Preprocessfile(my_jd)
 
     # customKeywords = ['spanish', 'hindi', 'opencv']
     customKeywords = []
-    my_tags = my_tags.split(",")
     for tag in my_tags:
         temp = tag.strip()
         customKeywords.append(temp)
