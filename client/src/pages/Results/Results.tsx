@@ -1,9 +1,9 @@
-import { message, Progress, Table } from 'antd';
+import { message, Progress, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import useFetch from 'hooks/useFetch';
 import Layout from 'layout/Layout';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ResultsWrapper, RTableContainer } from './Results.style';
 
 interface RecordType {
@@ -61,18 +61,13 @@ const columns: ColumnsType<RecordType> = [
     width: 350,
   },
   {
-    title: 'Actions',
+    title: 'Resume Profile',
     dataIndex: 'actions',
     render: (_, r) => {
       return (
-        <Link
-          to={{
-            pathname: `/result?rid=${r.resumeId}&jobId=${r.data.jobId}`,
-            state: { data: r.data },
-          }}
-        >
-          View Complete Result
-        </Link>
+        <Tag color="geekblue" key={r.resumeId}>
+          {r.data.predicted}
+        </Tag>
       );
     },
   },

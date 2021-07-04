@@ -1,9 +1,10 @@
 import { Tag } from 'antd';
 import React, { useState } from 'react';
 import { Typography } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { addProfile } from 'store/ducks';
+import { StoreState } from 'store';
 
 const { CheckableTag } = Tag;
 
@@ -42,7 +43,8 @@ const JobProfileContainer = styled.div`
 
 const JobProfile: React.FC = () => {
   const suggestedTags = tagsData;
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const profile = useSelector((state: StoreState) => state.stepsContent.profile);
+  const [selectedTags, setSelectedTags] = useState<string[]>(profile);
   const dispatch = useDispatch();
 
   const handleChange = (tag, checked) => {
