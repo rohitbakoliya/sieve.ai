@@ -82,7 +82,13 @@ export const getTagsSuggestion = (formData: { jd: string }): ApiAction => ({
   },
 });
 
-export const createJob = (formData: { jd: string; jobName: string }): ApiAction => ({
+interface IJobData {
+  jd: string;
+  jobName: string;
+  resumes: string[];
+  tags: string[];
+}
+export const createJob = (formData: IJobData): ApiAction => ({
   type: API,
   payload: {
     method: 'POST',
@@ -92,30 +98,24 @@ export const createJob = (formData: { jd: string; jobName: string }): ApiAction 
   onRequest: CREATE_JOB.REQUEST,
   onSuccess: (dispatch, data) => {
     dispatch({ type: CREATE_JOB.SUCCESS, payload: data });
+    dispatch({ type: RESET_ALL });
   },
   onFailure: (dispatch, err) => {
     dispatch({ type: CREATE_JOB.FAILURE, payload: err });
   },
 });
 
-interface IResultData {
-  jd: string;
-  jobName: string;
-  resumes: string[];
-  tags: string[];
-}
-
-export const getResults = (formData: IResultData): ApiAction => ({
+// @deprecated
+export const getResults = (formData): ApiAction => ({
   type: API,
   payload: {
     method: 'POST',
-    url: `/api/jobs`,
+    url: `/api/jobs/:jobId/results`,
     formData,
   },
   onRequest: GET_RESULTS.REQUEST,
   onSuccess: (dispatch, data) => {
     dispatch({ type: GET_RESULTS.SUCCESS, payload: data });
-    dispatch({ type: RESET_ALL });
   },
   onFailure: (dispatch, err) => {
     dispatch({ type: GET_RESULTS.FAILURE, payload: err });
