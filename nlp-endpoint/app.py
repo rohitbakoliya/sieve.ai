@@ -1,100 +1,50 @@
-import yake
-from spacy.matcher import PhraseMatcher
+# base imports
 from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
-from gensim.models import Word2Vec
-import PyPDF2
 import json
-from os import listdir
-from os.path import isfile, join
+
+# model imports
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import textract
+from itertools import chain
+from spacy.matcher import PhraseMatcher
+import string
+import os
 import pandas as pd
 from collections import Counter
 import en_core_web_sm
 nlp = en_core_web_sm.load()
+nltk.download('punkt')
+nltk.download('stopwords')
 
 app = Flask(__name__)
 CORS(app)
 
+# cv folder
 app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'
 
 
-###### JOB DESCRIPTION SECTION ####
+###### JOB DESCRIPTION SECTION ######
+
 @app.route("/save_jd", methods=['POST'])
+# saves job description in a text file
 def process_save_jd():
     my_jd = request.get_json()['job_desc']
-    jobtxt = my_jd.replace("\n", " ")
-    language = "en"
-    max_ngram_size = 3
-    deduplication_threshold = 0.9
-    numofkeywords = 20
-    custom_kw_extractor = yake.KeywordExtractor(
-        lan=language, n=max_ngram_size, dedupLim=deduplication_threshold, top=numofkeywords, features=None)
+    with open(os.path.join('../assets/', 'jobdesc.txt'), 'w') as f:
+        f.write(str(my_jd))
+    return 'Job Description Saved'
 
-    keywords = custom_kw_extractor.extract_keywords(jobtxt)
-    res = ''
-    for kw in keywords:
-        (a, b) = kw
-        res = res + a + ', '
-    return res
+######################################
+
+###### SAVE TAGS SECTION #############
 
 
-###### PREPROCESSING SECTION ######
-def pdfextract(file):
-    fileReader = PyPDF2.PdfFileReader(open(file, 'rb'))
-    countpage = fileReader.getNumPages()
-    count = 0
-    text = []
-    while count < countpage:
-        pageObj = fileReader.getPage(count)
-        count += 1
-        t = pageObj.extractText()
-        text.append(t)
-    return text
-
-
-def find_score(file, setKeywords, customKeywords):
-    model = Word2Vec.load("./backend algorithm/final.model")
-    resume = str(pdfextract(file))
-    resume = resume.replace("\\n", "")
-    resume = resume.lower()
-    length = len(setKeywords)  # need to add more keywords and improve model
-    Dict = {
-        'Data Science': 'data_science',
-        'Deep Learning': 'deep_learning',
-        'Web Development': 'Web',
-        'Human resources': 'hr'
-    }
-    keyword = list()
-    for i in range(0, length):
-        keyword.append([nlp(resume[0])
-                       for resume in model.wv.most_similar(Dict[setKeywords[i]])])
-    Customkeys = [nlp(resume) for resume in customKeywords]
-    matcher = PhraseMatcher(nlp.vocab)
-
-    for i in range(0, length):
-        matcher.add(Dict[setKeywords[i]], None, *keyword[i])
-    matcher.add('CustomKeywords', None, *Customkeys)
-    doc = nlp(resume)
-    matches = matcher(doc)
-
-    # The following is not required but additional data of the score can be obtained with the dataframe
-    KEYS = []
-    WORDS = []
-    for match_id, start, end in matches:
-        keys = nlp.vocab.strings[match_id]
-        words = doc[start: end]
-      #   print(f'{keys}  {words}')
-        KEYS.append(keys)
-        WORDS.append(words)
-    df = pd.DataFrame(KEYS, columns=['Type'])
-    df['Keyword'] = WORDS
-    sum = len(matches)
-    return df.to_string()
-
-
-###### SAVE TAGS SECTION ##########
 def save_tags(tags):
     res = []
     tags = tags.split(",")
@@ -111,9 +61,11 @@ def process_save_tags():
         return save_tags(my_tags)
     else:
         return "Wrong form method"
+######################################
+
+###### UPLOAD CV SECTION #############
 
 
-###### UPLOAD CV SECTION #########
 @app.route('/upload', methods=['POST'])
 def upload():
     files = request.files.getlist("file")
@@ -122,19 +74,108 @@ def upload():
             app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
     return 'upload successful'
 
+######################################
+
+###### NLP MODEL SECTION #############
+
+
+def Preprocessfile(filename):
+    text = textract.process(filename)
+    text = text.decode('utf-8').replace("\\n", " ")
+    x = []
+    tokens = word_tokenize(text)
+    tok = [w.lower() for w in tokens]
+    table = str.maketrans('', '', string.punctuation)
+    strpp = [w.translate(table) for w in tok]
+    words = [word for word in strpp if word.isalpha()]
+    stop_words = set(stopwords.words('english'))
+    words = [w for w in words if not w in stop_words]
+    x.append(words)
+    res = " ".join(chain.from_iterable(x))
+    return res
+
+
+def find_score(jobdes, filename, setKeywords, customKeywords, df):
+    resume = Preprocessfile(filename)
+    customKeywords = ' '.join(customKeywords)
+    jobdes = jobdes + ' ' + customKeywords
+    text = [resume, jobdes]
+    cv = CountVectorizer()
+    count_matrix = cv.fit_transform(text)
+    # print(cosine_similarity(count_matrix))
+    matchpercent = cosine_similarity(count_matrix)[0][1]*100
+    matchpercent = round(matchpercent, 2)
+    # print(matchpercent)
+    length = len(setKeywords)  # need to add more keywords and improve model
+    Dict = {
+        'Data Science': 'datascience',
+        'Machine Learning': 'machinelearning',
+        'Web Development': 'webdev',
+        'Human resources': 'hr',
+        'App Development': 'appdev'
+    }
+    keyword = []
+    for i in range(0, length):
+        keyword.append([nlp(resume)
+                       for resume in df[Dict[setKeywords[i]]].dropna(axis=0)])
+    matcher = PhraseMatcher(nlp.vocab)
+    for i in range(0, length):
+        matcher.add(Dict[setKeywords[i]], None, *keyword[i])
+    doc = nlp(resume)
+    matches = matcher(doc)
+    # print(matches)
+    # The following is not required but additional data of the score can be obtained with the dataframe
+    KEYS = []
+    WORDS = []
+    for match_id, start, end in matches:
+        keys = nlp.vocab.strings[match_id]
+        words = doc[start: end]
+        # print(f'{keys}  {words}')
+        KEYS.append(keys)
+        WORDS.append(words)
+    DF = pd.DataFrame(KEYS, columns=['Type'])
+    DF['Keyword'] = WORDS
+    # print(DF)
+    result = {
+        'score': matchpercent,
+        'totalmatches': len(matches)
+    }
+    for i in range(0, length):
+        result[setKeywords[i]] = len(
+            DF.loc[DF['Type'] == Dict[setKeywords[i]]])
+
+    return result
+
+######################################
+
 
 ###### FINAL PROCESS SECTION #########
+
 @app.route('/process', methods=['GET'])
 def show_result():
     files = os.listdir(app.config['UPLOAD_FOLDER'])
-    setKeywords = ['Data Science', 'Deep Learning', 'Human resources']
-    customKeywords = ['spanish', 'hindi', 'opencv']
+
+    jobdes = Preprocessfile(os.path.join('../assets/', 'jobdesc.txt'))
+
+    df = pd.read_csv('setkeywords.csv')
+    setKeywords = ['Data Science', 'Machine Learning']
+
+    # customKeywords = ['spanish', 'hindi', 'opencv']
+    my_tags = request.get_json()['tags']
+    customKeywords = []
+    my_tags = my_tags.split(",")
+    for tag in my_tags:
+        temp = tag.strip()
+        customKeywords.append(temp)
+
     res = dict()
     for file in files:
-        res[file] = find_score(os.path.join(
-            app.config['UPLOAD_FOLDER'], file), setKeywords, customKeywords)
+        res[file] = find_score(jobdes, os.path.join(
+            app.config['UPLOAD_FOLDER'], file), setKeywords, customKeywords, df)
     j_res = json.dumps(res)
     return j_res
+
+######################################
 
 
 @app.route('/')
@@ -143,4 +184,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(debug="True", port=5002)
+    app.run(port=5002)
