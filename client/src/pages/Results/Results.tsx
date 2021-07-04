@@ -12,6 +12,7 @@ interface RecordType {
   score: number;
   resumeId: string;
   _key: number;
+  data: any;
 }
 
 const dataSource = [
@@ -64,7 +65,12 @@ const columns: ColumnsType<RecordType> = [
     dataIndex: 'actions',
     render: (_, r) => {
       return (
-        <Link to={{ pathname: `/result?rid=${r.resumeId}`, state: { data: r } }}>
+        <Link
+          to={{
+            pathname: `/result?rid=${r.resumeId}&jobId=${r.data.jobId}`,
+            state: { data: r.data },
+          }}
+        >
           View Complete Result
         </Link>
       );
@@ -88,10 +94,10 @@ const Leaderboard: React.FC = () => {
         resumeId,
       } = result;
 
-      return { name, email, score, resumeId, _key: idx };
+      return { name, email, score, resumeId, _key: idx, data: { ...result, jobId } };
     });
     setData(resultsArray);
-  }, [results]);
+  }, [results, jobId]);
 
   error && message.error(error);
 

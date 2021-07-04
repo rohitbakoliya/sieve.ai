@@ -7,6 +7,7 @@ import LandingPage from 'pages/Landing/Landing';
 import Dashboard from 'pages/Dashboard/Dashboard';
 import AddJobDashboard from 'pages/Dashboard/AddJobDashboard';
 import Results from 'pages/Results/Results';
+import ResultInfo from 'pages/ResultInfo/ResultInfo';
 import Login from 'pages/Login/Login';
 
 const MainRouter: React.FC = () => (
@@ -17,6 +18,7 @@ const MainRouter: React.FC = () => (
 
       <PrivateRoute exact path="/dashboard" component={Dashboard} />
       <PrivateRoute exact path="/dashboard/new" component={AddJobDashboard} />
+      <PrivateRoute exact path="/result" component={ResultInfo} />
       <PrivateRoute exact path="/results/:jobId" component={Results} />
 
       <PublicRoute component={() => <div>404, page not found!</div>} />
