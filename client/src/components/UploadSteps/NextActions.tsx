@@ -1,26 +1,18 @@
 import { store } from 'store';
-import { createJob, getTagsSuggestion } from 'store/ducks';
+import { createJob } from 'store/ducks';
 
 // action handlers
-export const JobMetaAction = async () => {
-  const jd = store.getState().stepsContent.jd;
-
-  try {
-    await store.dispatch(getTagsSuggestion({ jd }));
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const JobMetaAction = () => {};
 
 export const TagsGroupAction = () => {};
 
 export const UploadFileAction = async () => {
-  const { jd, jobName, resumes, suggestedTags, tags } = store.getState().stepsContent;
+  const { jd, resumes, profile, tags } = store.getState().stepsContent;
   const payload = {
     jd,
-    jobName,
     resumes,
-    tags: [...suggestedTags, ...tags],
+    tags,
+    profile,
   };
   const { id } = await store.dispatch(createJob(payload));
   return {

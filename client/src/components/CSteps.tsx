@@ -12,7 +12,8 @@ const CStepsWrapper = styled.div`
   .steps-content {
     margin-top: 20px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: left;
     justify-content: center;
     min-height: 400px;
   }

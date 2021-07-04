@@ -7,16 +7,15 @@ const JobSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    jobName: {
-      type: String,
-      trim: true,
-      required: true,
-    },
     jd: {
       type: String,
       required: true,
       trim: true,
       maxLength: 4000,
+    },
+    profile: {
+      type: [String],
+      required: true,
     },
     tags: {
       type: [String],

@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { CenterContainer, DashboardWrapper } from './Dashboard.style';
 import Layout from 'layout/Layout';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Table } from 'antd';
+import { Button, Table, Tag } from 'antd';
 import useFetch from 'hooks/useFetch';
 
 const columns = [
   {
-    title: 'Job Name',
-    key: 'jobName',
-    dataIndex: 'jobName',
+    title: 'Profile',
+    key: 'profile',
+    dataIndex: 'profile',
+    render: (_, r) => (
+      <>
+        {_.map(tag => (
+          <Tag color="geekblue" key={tag}>
+            {tag}
+          </Tag>
+        ))}
+      </>
+    ),
   },
   {
     title: 'Job Description',
@@ -36,8 +45,8 @@ const Dashboard: React.FC<{}> = () => {
   useEffect(() => {
     if (!jobs) return;
     const jobsArray = jobs.map(job => {
-      const { jobName, jd, resumes, id } = job;
-      return { jobName, jd, resumeCount: resumes.length, jobId: id };
+      const { profile, jd, resumes, id } = job;
+      return { profile, jd, resumeCount: resumes.length, jobId: id };
     });
     setData(jobsArray);
   }, [jobs]);
@@ -53,7 +62,7 @@ const Dashboard: React.FC<{}> = () => {
         </Button>
         <br />
         <CenterContainer>
-          <Table columns={columns} dataSource={data} rowKey={(r: any) => r.jobId} />
+          <Table columns={columns as any} dataSource={data} rowKey={(r: any) => r.jobId} />
         </CenterContainer>
       </DashboardWrapper>
     </Layout>

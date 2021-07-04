@@ -1,7 +1,6 @@
 resume_parser==0.8
 Flask_Cors==3.0.10
 joblib==1.0.1
-en_core_web_sm==2.3.1
 Flask==2.0.1
 nltk==3.6.2
 Werkzeug==2.0.1

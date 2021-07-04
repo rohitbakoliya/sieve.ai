@@ -86,6 +86,7 @@ export const getJobResultsById = async (req, res) => {
 
     const payload = {
       jd: job.jd,
+      profile: job.profile,
       tags: job.tags,
       resumes: job.resumes,
       userId: req.user._id,

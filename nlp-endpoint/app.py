@@ -31,20 +31,8 @@ cors = CORS(app, supports_credentials=True, resources={
             r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
 
 # cv folder
-app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'
+app.config['UPLOAD_FOLDER'] = os.path.join('..', 'uploads')
 
-
-###### JOB DESCRIPTION SECTION ######
-
-@app.route("/save_jd", methods=['POST'])
-# saves job description in a text file
-def process_save_jd():
-    my_jd = request.get_json()['job_desc']
-    with open(os.path.join('../assets/', 'jobdesc.txt'), 'w') as f:
-        f.write(str(my_jd))
-    return 'Job Description Saved'
-
-######################################
 
 ###### SAVE TAGS SECTION #############
 
@@ -166,19 +154,26 @@ def find_score(jobdes, filename, customKeywords):
 
 ###### FINAL PROCESS SECTION #########
 
-@app.route('/process', methods=['GET'])
+@app.route('/process', methods=['POST'])
 def show_result():
     my_profile = request.get_json()['profile']
+    user_id = request.get_json()['userId']
+    resumes = request.get_json()['resumes']
+    my_tags = request.get_json()['tags']
+    my_jd = request.get_json()['jd']
+
+    with open(os.path.join('../assets/', 'jobdesc.txt'), 'w') as f:
+        f.write(str(my_jd))
+
     filtered_files = []
-    files = os.listdir(app.config['UPLOAD_FOLDER'])
-    for file in files:
-        if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], file)) in my_profile:
-            filtered_files.append(file)
+    for resume in resumes:
+        print(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume))
+        # if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume)) in my_profile:
+        #     filtered_files.append(resume)
 
     jobdes = Preprocessfile(os.path.join('../assets/', 'jobdesc.txt'))
 
     # customKeywords = ['spanish', 'hindi', 'opencv']
-    my_tags = request.get_json()['tags']
     customKeywords = []
     my_tags = my_tags.split(",")
     for tag in my_tags:
@@ -188,7 +183,7 @@ def show_result():
     res = list()
     for file in filtered_files:
         score = find_score(jobdes, os.path.join(
-            app.config['UPLOAD_FOLDER'], file), customKeywords)
+            app.config['UPLOAD_FOLDER'], user_id, file), customKeywords)
         user_info = resumeparse.read_file(file)
         res.append({
             'resumeId': file,
