@@ -1,7 +1,6 @@
 import { IAction } from 'store';
 import { ApiAction } from 'store/middlewares/apiMiddleware';
 import { API, ApiActionCreator } from 'store/types';
-import { history } from 'utils/history';
 import { CLEAR_ALL_ERRORS } from './errors';
 
 // Actions
@@ -69,7 +68,6 @@ export const signupUser = (formData: any): ApiAction => ({
   onSuccess: (dispatch, data) => {
     dispatch({ type: CLEAR_ALL_ERRORS });
     dispatch({ type: SIGNUP.SUCCESS });
-    history.push(`/?signedup=true`);
   },
   onFailure: (dispatch, err) => {
     dispatch({ type: SIGNUP.FAILURE, payload: err });
@@ -89,7 +87,6 @@ export const loginUser = (formData: { email: string; password: string }): ApiAct
   onSuccess: (dispatch, data) => {
     dispatch({ type: LOGIN.SUCCESS, payload: data });
     dispatch({ type: CLEAR_ALL_ERRORS });
-    history.push('/dashboard');
   },
   onFailure: (dispatch, err) => {
     dispatch({ type: LOGIN.FAILURE, payload: err });
@@ -108,7 +105,6 @@ export const logoutUser = (): ApiAction => ({
   onRequest: LOGOUT.REQUEST,
   onSuccess: (dispatch, data) => {
     dispatch({ type: LOGOUT.SUCCESS, payload: data });
-    history.push('/', null);
   },
   onFailure: (dispatch, err) => {
     dispatch({ type: LOGOUT.FAILURE, payload: err });

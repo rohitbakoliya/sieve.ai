@@ -24,7 +24,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app,supports_credentials = True, resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
 
 # cv folder
 app.config['UPLOAD_FOLDER'] = '../assets/UploadedCVs'

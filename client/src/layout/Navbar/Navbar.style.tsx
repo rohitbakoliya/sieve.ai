@@ -12,11 +12,13 @@ export const NavbarWrapper = styled.header`
     transition: 0.2s;
     &:hover {
       transform: scale(1.03);
+      color: ${p => p.theme.colors.white};
     }
   }
   a,
   button {
     color: ${p => p.theme.colors.white};
     padding: 0 20px;
+    font-size: 17px;
   }
 `;

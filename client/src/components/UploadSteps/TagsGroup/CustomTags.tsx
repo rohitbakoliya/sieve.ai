@@ -4,38 +4,14 @@ import { StoreState } from 'store';
 import { Tag, Input, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { addTags } from 'store/ducks';
-import styled from 'styled-components';
+import { CustomTagsContainer } from './TagsGroup.style';
+import { Typography } from 'antd';
 
-const TagsGroupWrapper = styled.div`
-  width: 100%;
-  .edit-tag {
-    cursor: pointer;
-    user-select: none;
-    padding: 4px 11px;
-    margin-bottom: 8px;
-  }
-  .tag-input {
-    width: 100px;
-    vertical-align: top;
-    margin-bottom: 8px;
-  }
-  .site-tag-input {
-    width: 100%;
-  }
-  .site-tag-plus {
-    background: #fff;
-    border-style: dashed;
-    width: 100%;
-    text-align: center;
-    padding: 4px 11px;
-  }
-`;
+const { Title } = Typography;
 
-const TagsGroup: React.FC = () => {
+const CustomTags: React.FC = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state: StoreState) => state.stepsContent.tags);
-  let inputRef: Input | null;
-  let editInputRef: Input | null;
   const [state, setState] = useState({
     inputVisible: false,
     inputValue: '',
@@ -49,8 +25,6 @@ const TagsGroup: React.FC = () => {
   };
 
   const showInput = () => {
-    console.log('showInput', inputRef);
-    inputRef?.focus();
     setState(_prev => ({ ..._prev, inputVisible: true }));
   };
 
@@ -65,7 +39,6 @@ const TagsGroup: React.FC = () => {
       const _tags = [...tags, inputValue];
       dispatch(addTags(_tags));
     }
-    console.log(tags);
     setState(_prev => ({
       ..._prev,
       inputVisible: false,
@@ -89,25 +62,17 @@ const TagsGroup: React.FC = () => {
       };
     });
   };
-  const saveInputRef = input => {
-    if (input) inputRef = input;
-    console.log('inside saveInputRef', inputRef);
-  };
-
-  const saveEditInputRef = input => {
-    editInputRef = input;
-  };
 
   const { inputVisible, inputValue, editInputIndex, editInputValue } = state;
 
   return (
-    <TagsGroupWrapper>
-      {console.log(inputRef!, editInputRef!)}
+    <CustomTagsContainer>
+      <Title level={5}>Add Custom Tags:</Title>
       {tags.map((tag, index) => {
         if (editInputIndex === index) {
           return (
             <Input
-              ref={saveEditInputRef}
+              ref={node => node?.focus()}
               key={tag}
               size="middle"
               className="tag-input"
@@ -120,12 +85,9 @@ const TagsGroup: React.FC = () => {
         }
         const isLongTag = tag.length > 20;
         const tagElem = (
-          <Tag className="edit-tag" key={tag} onClose={() => handleClose(tag)}>
+          <Tag className="edit-tag" key={tag} closable onClose={() => handleClose(tag)}>
             <span
               onDoubleClick={e => {
-                console.log('from duble click', editInputRef!);
-                editInputRef?.focus();
-                console.log('clicked');
                 setState(_prev => ({ ..._prev, editInputIndex: index, editInputValue: tag }));
                 e.preventDefault();
               }}
@@ -147,7 +109,7 @@ const TagsGroup: React.FC = () => {
       <br />
       {inputVisible && (
         <Input
-          ref={saveInputRef}
+          ref={node => node?.focus()}
           type="text"
           size="middle"
           className="site-tag-input"
@@ -157,14 +119,13 @@ const TagsGroup: React.FC = () => {
           onPressEnter={handleInputConfirm}
         />
       )}
-
       {!inputVisible && (
         <Tag className="site-tag-plus" onClick={showInput}>
           <PlusOutlined /> New Tag
         </Tag>
       )}
-    </TagsGroupWrapper>
+    </CustomTagsContainer>
   );
 };
 
-export default TagsGroup;
+export default CustomTags;
