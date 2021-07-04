@@ -6,7 +6,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import textract
 from itertools import chain
-from resume_parser import resumeparse
+from pyresparser import ResumeParser
 from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -87,8 +87,9 @@ def Preprocessfile(filename):
     text = filename
     if ".pdf" in filename:
         text = textract.process(filename)
-    text = text.decode('utf-8').replace("\\n", " ")
-    # print(text)
+        text = text.decode('utf-8').replace("\\n", " ")
+    else:
+        text = text.replace("\\n", " ")
     x = []
     tokens = word_tokenize(text)
     tok = [w.lower() for w in tokens]
@@ -98,7 +99,6 @@ def Preprocessfile(filename):
     stop_words = set(stopwords.words('english'))
     words = [w for w in words if not w in stop_words]
     x.append(words)
-    # print(x)
     res = " ".join(chain.from_iterable(x))
     return res
 
@@ -145,10 +145,8 @@ def find_score(jobdes, filename, customKeywords):
     text = [resume, jobdes]
     cv = CountVectorizer()
     count_matrix = cv.fit_transform(text)
-    print(cosine_similarity(count_matrix))
     matchpercent = cosine_similarity(count_matrix)[0][1]*100
     matchpercent = round(matchpercent, 2)
-    print(matchpercent)
     return matchpercent
 
 ######################################
@@ -164,11 +162,11 @@ def show_result():
     my_tags = request.get_json()['tags']
     my_jd = request.get_json()['jd']
 
-
     filtered_files = []
     for resume in resumes:
         if predictResume(os.path.join(app.config['UPLOAD_FOLDER'], user_id, resume)) in my_profile:
             filtered_files.append(resume)
+
 
     jobdes = Preprocessfile(my_jd)
 
@@ -182,7 +180,11 @@ def show_result():
     for file in filtered_files:
         score = find_score(jobdes, os.path.join(
             app.config['UPLOAD_FOLDER'], user_id, file), customKeywords)
-        user_info = resumeparse.read_file(file)
+        user_info = ResumeParser(os.path.join(
+            app.config['UPLOAD_FOLDER'], user_id, file)).get_extracted_data()
+
+        user_info['predicted']=predictResume(os.path.join(app.config['UPLOAD_FOLDER'], user_id, file))
+
         res.append({
             'resumeId': file,
             'score': score,
@@ -201,4 +203,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(port=5002)
+    app.run(port=5002, debug=True)
