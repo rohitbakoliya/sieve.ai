@@ -7,6 +7,7 @@ import { history } from 'utils/history';
 import GlobalStyles from './styles/global';
 import { store } from 'store';
 import theme from 'config/theme';
+import 'styles/App.less';
 
 const App = () => {
   return (

@@ -4,9 +4,9 @@ Full Stack Engineer
 
 Job Description
 
-At Levi Strauss & Co., innovation is core to who we are. From the time we invented the blue jean a century and a half ago until today we’ve pushed the boundaries and have been at the center of culture. Keeping with our rich history, data and analytics is a key focus to help us compete in the future. We have embarked on a multi-year transformation in our decision making to inject analytics into every step of our business. We’re using analytics to establish a stronger relationship with our brands’ fans as well as to innovate in our product development processes.
+At Levi Strauss & Co., innovation is core to who we are. From the time we invented the blue jean a century and a half ago until today weï¿½ve pushed the boundaries and have been at the center of culture. Keeping with our rich history, data and analytics is a key focus to help us compete in the future. We have embarked on a multi-year transformation in our decision making to inject analytics into every step of our business. Weï¿½re using analytics to establish a stronger relationship with our brandsï¿½ fans as well as to innovate in our product development processes.
 
-From domain driven micro-services and distributed real-time collaboration applications to machine learning based product development and business decision making tools, everything is in play. We are looking for inventors who want to build and scale these technologies from the ground up. Our team is actively seeking professionals, with opinions, who aren’t afraid to speak their minds, get their hands dirty and prove their ideas through creation... not just PowerPoint. You would be joining a small and flexible team of technology professionals, researchers, computer scientists, artists, and straight-up denim nerds that are aiming to lead change in the fashion industry through disruptive modern technologies.
+From domain driven micro-services and distributed real-time collaboration applications to machine learning based product development and business decision making tools, everything is in play. We are looking for inventors who want to build and scale these technologies from the ground up. Our team is actively seeking professionals, with opinions, who arenï¿½t afraid to speak their minds, get their hands dirty and prove their ideas through creation... not just PowerPoint. You would be joining a small and flexible team of technology professionals, researchers, computer scientists, artists, and straight-up denim nerds that are aiming to lead change in the fashion industry through disruptive modern technologies.
 
 We are looking for a Full Stack Engineer to execute the design and deployment of critical apps for the Brand and Operations organization. You will be in charge of the development of a high-quality web application that complies with coding standards, technical design and security.
 
@@ -18,7 +18,7 @@ Work with functional and business teams to guide back-end development
 Be the technical lead for multiple projects that involve diverse teams
 Work with the technical product manager to ensure the road map to execution
 About You
-Bachelor’s or Master’s degree in computer science, engineering or relevant field
+Bachelors  degree in computer science, engineering or relevant field
 Minimum 4 years' experience with full stack development
 At least 4 years of experience with HTML, CSS, and JavaScript
 Experience with globally supported frameworks such as Angular, Vue.js and React

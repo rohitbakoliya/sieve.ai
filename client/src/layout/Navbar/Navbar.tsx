@@ -29,8 +29,9 @@ const Navbar: React.FC = () => {
 
   return (
     <NavbarWrapper>
-      <div>
+      <div className="brand__info">
         <img src={Logo} alt="app logo" height="25px" />
+        Sieve.ai
       </div>
       <div className="nav__links">
         <NavLink to="/" exact>

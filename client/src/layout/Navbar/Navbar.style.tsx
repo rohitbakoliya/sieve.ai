@@ -21,4 +21,11 @@ export const NavbarWrapper = styled.header`
     padding: 0 20px;
     font-size: 17px;
   }
+  .brand__info {
+    color: ${p => p.theme.colors.white};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+  }
 `;

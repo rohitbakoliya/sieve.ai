@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@craco/craco": "^6.2.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -13,6 +14,7 @@
     "@types/react-dom": "^17.0.0",
     "antd": "^4.16.6",
     "axios": "^0.21.1",
+    "craco-less": "^1.18.0",
     "history": "4.10.1",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
@@ -31,8 +33,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "craco start",
+    "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier \"**/*.{js,jsx,css}\" --write"

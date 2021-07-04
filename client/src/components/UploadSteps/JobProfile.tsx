@@ -32,7 +32,13 @@ const tagsData: string[] = [
   'Web Designing',
 ];
 
-const JobProfileContainer = styled.div``;
+const JobProfileContainer = styled.div`
+  .edit-tag {
+    padding: 2px 11px;
+    margin-bottom: 4px;
+    font-size: 13.5px;
+  }
+`;
 
 const JobProfile: React.FC = () => {
   const suggestedTags = tagsData;
