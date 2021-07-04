@@ -1,9 +1,10 @@
-en_core_web_sm==3.0.0
-textract==1.6.3
+resume_parser==0.8
 Flask_Cors==3.0.10
-pandas==1.2.5
-Werkzeug==2.0.1
+joblib==1.0.1
+en_core_web_sm==2.3.1
 Flask==2.0.1
 nltk==3.6.2
-spacy==3.0.6
+Werkzeug==2.0.1
+numpy==1.21.0
+textract==1.6.3
 scikit_learn==0.24.2
