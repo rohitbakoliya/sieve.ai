@@ -35,6 +35,8 @@ const defaultProps: UploadProps = {
 };
 
 const UploadFilesWrapper = styled.div`
+margin-top:100px;
+  min-height: 100%;
   width: 100%;
   .ant-radio-wrapper {
     margin-bottom: 20px;

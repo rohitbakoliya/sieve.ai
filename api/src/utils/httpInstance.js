@@ -3,8 +3,7 @@ import { NLP_URL } from '../config';
 
 const instance = axios.create({
   baseURL: NLP_URL,
-  withCredentials: true,
-  timeout: 30000,
+  withCredentials: true
 });
 
 instance.interceptors.response.use(undefined, error => {

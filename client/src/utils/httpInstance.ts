@@ -3,8 +3,7 @@ import { SERVER_URL } from 'config';
 
 const instance: AxiosInstance = axios.create({
   baseURL: SERVER_URL,
-  withCredentials: true,
-  timeout: 30000,
+  withCredentials: true
 });
 
 instance.interceptors.response.use(undefined, (error: AxiosError) => {
