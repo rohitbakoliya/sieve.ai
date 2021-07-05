@@ -1,5 +1,5 @@
-import React from 'react';
-import { message, Upload, UploadProps } from 'antd';
+import React, { useState } from 'react';
+import { message, Radio, Upload, UploadProps } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { store } from 'store';
@@ -36,12 +36,19 @@ const defaultProps: UploadProps = {
 
 const UploadFilesWrapper = styled.div`
   width: 100%;
+  .ant-radio-wrapper {
+    margin-bottom: 20px;
+  }
 `;
 
 const UploadFiles: React.FC<UploadProps> = props => {
+  const [checked, setChecked] = useState(true);
   return (
     <UploadFilesWrapper>
-      <Dragger {...props}>
+      <Radio checked={checked} onClick={() => setChecked(!checked)}>
+        Upload Folder
+      </Radio>
+      <Dragger {...props} directory={checked}>
         <p className="ant-upload-drag-icon">
           <CloudUploadOutlined />
           <p className="ant-upload-text">Click or drag file to this area to upload</p>

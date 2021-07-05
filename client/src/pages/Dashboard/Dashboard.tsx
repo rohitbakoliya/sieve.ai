@@ -15,7 +15,7 @@ const columns = [
     render: (_, r) => (
       <>
         {_.map(tag => (
-          <Tag color="geekblue" key={tag}>
+          <Tag color="purple" key={tag}>
             {tag}
           </Tag>
         ))}
@@ -46,7 +46,7 @@ const columns = [
 
 const Dashboard: React.FC<{}> = () => {
   const history = useHistory();
-  const [jobs] = useFetch('/api/jobs', { cache: true });
+  const [jobs] = useFetch('/api/jobs');
   const [data, setData] = useState([]);
 
   useEffect(() => {

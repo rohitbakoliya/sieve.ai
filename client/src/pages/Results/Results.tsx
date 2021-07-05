@@ -1,9 +1,12 @@
 import { message, Progress, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { SERVER_URL } from 'config';
 import useFetch from 'hooks/useFetch';
 import Layout from 'layout/Layout';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { StoreState } from 'store';
 import { ResultsWrapper, RTableContainer } from './Results.style';
 
 interface RecordType {
@@ -41,16 +44,26 @@ const columns: ColumnsType<RecordType> = [
     dataIndex: 'actions',
     render: (_, r) => {
       return (
-        <Tag color="geekblue" key={r.resumeId}>
+        <Tag color="purple" key={r.resumeId}>
           {r.data.userInfo.predicted}
         </Tag>
       );
     },
   },
+  {
+    title: 'Action',
+    dataIndex: 'viewResume',
+    render: (_, r) => (
+      <a href={`${SERVER_URL}/api/pdf/${r.data.userId}/${r.resumeId}`} target="__blank">
+        View Resume
+      </a>
+    ),
+  },
 ];
 
 const Leaderboard: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
+  const userId = useSelector((state: StoreState) => state.auth.user?.id);
   const URL = `/api/jobs/${jobId}/results`;
   const [results, isLoading, error] = useFetch(URL);
   const [data, setData] = useState([]);
@@ -65,10 +78,10 @@ const Leaderboard: React.FC = () => {
         resumeId,
       } = result;
 
-      return { name, email, score, resumeId, _key: idx, data: { ...result, jobId } };
+      return { name, email, score, resumeId, _key: idx, data: { ...result, jobId, userId } };
     });
     setData(resultsArray);
-  }, [results, jobId]);
+  }, [results, jobId, userId]);
 
   error && message.error(error);
 

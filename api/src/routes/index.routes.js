@@ -4,6 +4,7 @@ import { passportJWT } from '../middlewares/passportJWT';
 import authRoutes from './auth.route';
 import uploadRoutes from './upload.route';
 import jobRoutes from './job.route';
+import pdfRoutes from './pdf.route';
 
 const router = express.Router();
 
@@ -13,6 +14,8 @@ router.use('/auth', authRoutes);
 router.use('/upload', passportJWT, uploadRoutes);
 
 router.use('/jobs', passportJWT, jobRoutes);
+
+router.use('/pdf',passportJWT, pdfRoutes);
 
 // other routes
 router.use('/*', (req, res) => {
