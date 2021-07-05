@@ -12,7 +12,7 @@ export const DashboardWrapper = styled.section`
 `;
 
 export const DashboardNWrapper = styled.section`
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,8 +20,15 @@ export const DashboardNWrapper = styled.section`
 `;
 
 export const CenterContainer = styled.div`
-  margin: 0 auto;
+  margin: 50px auto;
+  padding: 10px;
+  width: 80%;
+  box-shadow: ${p => p.theme.shadows.small};
+`;
+
+export const CenterNContainer = styled.div`
   padding: 30px 40px;
+  margin: 50px auto;
   width: 80%;
   box-shadow: ${p => p.theme.shadows.small};
 `;

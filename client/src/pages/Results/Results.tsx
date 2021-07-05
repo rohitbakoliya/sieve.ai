@@ -36,8 +36,10 @@ const columns: ColumnsType<RecordType> = [
     key: 'score',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.score - b.score,
-    render: (_, r) => <Progress percent={r.score} />,
-    width: 350,
+    render: (_, r) => (
+      <Progress strokeColor={{from: '#7d64a7', to: '#b58bdd'}} style={{ paddingLeft: '10px', paddingRight: '10px' }} percent={r.score} />
+    ),
+    width: '30%',
   },
   {
     title: 'Resume Profile',

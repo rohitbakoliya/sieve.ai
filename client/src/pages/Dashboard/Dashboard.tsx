@@ -46,7 +46,7 @@ const columns = [
 
 const Dashboard: React.FC<{}> = () => {
   const history = useHistory();
-  const [jobs] = useFetch('/api/jobs');
+  const [jobs, loading] = useFetch('/api/jobs');
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -67,9 +67,14 @@ const Dashboard: React.FC<{}> = () => {
         <Button type="primary" onClick={handleClick}>
           Create New Job Hiring
         </Button>
-        <br />
         <CenterContainer>
-          <Table columns={columns as any} dataSource={data} rowKey={(r: any) => r.jobId} />
+          <Table
+            loading={loading}
+            pagination={{ pageSize: 8 }}
+            columns={columns as any}
+            dataSource={data}
+            rowKey={(r: any) => r.jobId}
+          />
         </CenterContainer>
       </DashboardWrapper>
     </Layout>

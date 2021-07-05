@@ -1,15 +1,15 @@
 import React from 'react';
 import UploadSteps from 'components/UploadSteps/UploadSteps';
-import { DashboardNWrapper, CenterContainer } from './Dashboard.style';
+import { DashboardNWrapper, CenterNContainer } from './Dashboard.style';
 import Layout from 'layout/Layout';
 
 const AddJobDashboard: React.FC<{}> = () => {
   return (
     <Layout>
       <DashboardNWrapper>
-        <CenterContainer>
+        <CenterNContainer>
           <UploadSteps />
-        </CenterContainer>
+        </CenterNContainer>
       </DashboardNWrapper>
     </Layout>
   );

@@ -6,7 +6,7 @@ const ChildrendWrapper = styled.main`
   background: ${p => p.theme.colors.accent};
   min-height: calc(100vh - 50px);
   /* https://stackoverflow.com/a/21836870/11922517 */
-  height: 1px;
+  height: auto;
 `;
 
 const Layout: React.FC = ({ children }) => {
