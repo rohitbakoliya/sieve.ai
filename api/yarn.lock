@@ -2391,6 +2391,13 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+express-static-gzip@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/express-static-gzip/-/express-static-gzip-2.1.1.tgz#ee3a0eca3f10348bcd214095fbb46f8d0f8cb471"
+  integrity sha512-J+xSzdr5lj1cIuZey0ac6nUv22VE7GrdwTERqE8DsrqSXLm1zjeYWTVbK37t8exGwobxBXeWU2bM7eSMjBR4YA==
+  dependencies:
+    serve-static "^1.14.1"
+
 express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.npmjs.org/express/-/express-4.17.1.tgz"
@@ -4588,7 +4595,7 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-serve-static@1.14.1:
+serve-static@1.14.1, serve-static@^1.14.1:
   version "1.14.1"
   resolved "https://registry.npmjs.org/serve-static/-/serve-static-1.14.1.tgz"
   integrity sha512-JMrvUwE54emCYWlTI+hGrGv5I8dEwmco/00EvkzIIsR7MqrHonbD9pO2MOfFnpFntl7ecpZs+3mW+XbQZu9QCg==

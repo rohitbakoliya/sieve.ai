@@ -7,12 +7,6 @@ import SignupForm from './SignupForm';
 
 const { TabPane } = Tabs;
 
-// const renderTabBar = (props, DefaultTabBar) => (
-//   <Sticky bottomOffset={40}>
-//     {({ style }) => <DefaultTabBar {...props} style={{ ...style }} />}
-//   </Sticky>
-// );
-
 const Login: React.FC = () => {
   return (
     <Layout>
