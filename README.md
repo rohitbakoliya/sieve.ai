@@ -1,5 +1,5 @@
 <p align="center">
-  <h2 align="center">Sieve.ai</h2>
+  <h3 align="center">Sieve.ai</h3>
   <p align="center">
   Let Us Sort the Resumes
   </p>
