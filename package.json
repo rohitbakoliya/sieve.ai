@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "node -e 'console.log('running...')"
+  }
+}
