@@ -8,38 +8,37 @@ import { RButtonsContainer } from './Results.style';
 interface Props {
   data: any[];
 }
+const headers = [
+  {
+    label: 'Name',
+    key: 'name',
+  },
+  {
+    label: 'E-mail',
+    key: 'email',
+  },
+  {
+    label: 'Mobile No',
+    key: 'data.userInfo.mobile_number',
+  },
+  {
+    label: 'Score',
+    key: 'score',
+  },
+  {
+    label: 'Profile',
+    key: 'data.userInfo.predicted',
+  },
+  {
+    label: 'Resume Link',
+    key: 'resumeLink',
+  },
+];
 
 const ExportResults: React.FC<Props> = ({ data: csvData }) => {
   const { jobId } = useParams<{ jobId: string }>();
   const [isPreparing, setIsPreparing] = useState(false);
   csvData.sort((d1, d2) => d2.score - d1.score);
-
-  const headers = [
-    {
-      label: 'Name',
-      key: 'name',
-    },
-    {
-      label: 'E-mail',
-      key: 'email',
-    },
-    {
-      label: 'Mobile No',
-      key: 'data.userInfo.mobile_number',
-    },
-    {
-      label: 'Score',
-      key: 'score',
-    },
-    {
-      label: 'Profile',
-      key: 'data.userInfo.predicted',
-    },
-    {
-      label: 'Resume Link',
-      key: 'resumeLink',
-    },
-  ];
   const handleExport = () => {
     setIsPreparing(true);
     setIsPreparing(false);

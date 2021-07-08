@@ -12,6 +12,7 @@ import ExportResults from './ExportResults';
 interface RecordType {
   name: string;
   email: string;
+  phone: string;
   score: number;
   resumeLink: string;
   _key: number;
@@ -79,15 +80,22 @@ const Leaderboard: React.FC = () => {
     if (!results) return;
     console.log(results);
     const resultsArray = results.map((result, idx) => {
-      const {
-        userInfo: { name, email },
-        score,
-        resumeId,
-      } = result;
+      const { userInfo, score, resumeId } = result;
+
+      // fixing nulls
+      Object.keys(userInfo).forEach(key => {
+        const value = userInfo[key];
+        if (!value) {
+          userInfo[key] = 'NA';
+        }
+      });
+
+      const { name, mobile_number: phone, email } = userInfo;
       const resumeLink = `${SERVER_URL}/api/pdf/${userId}/${resumeId}`;
       return {
         name,
         email,
+        phone,
         score,
         _key: idx,
         resumeLink,
