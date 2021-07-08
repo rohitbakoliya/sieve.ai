@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { message, Radio, Upload, UploadProps } from 'antd';
+import { message, Upload, UploadProps } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { store } from 'store';
 import { addResume } from 'store/ducks';
 import { SERVER_URL } from 'config';
+import Checkbox from 'antd/lib/checkbox/Checkbox';
 
 const { Dragger } = Upload;
 
@@ -35,10 +36,10 @@ const defaultProps: UploadProps = {
 };
 
 const UploadFilesWrapper = styled.div`
-margin-top:100px;
+  margin-top: 100px;
   min-height: 100%;
   width: 100%;
-  .ant-radio-wrapper {
+  .ant-checkbox-wrapper {
     margin-bottom: 20px;
   }
 `;
@@ -47,9 +48,9 @@ const UploadFiles: React.FC<UploadProps> = props => {
   const [checked, setChecked] = useState(true);
   return (
     <UploadFilesWrapper>
-      <Radio checked={checked} onClick={() => setChecked(!checked)}>
+      <Checkbox checked={checked} onClick={() => setChecked(!checked)}>
         Upload Folder
-      </Radio>
+      </Checkbox>
       <Dragger {...props} directory={checked}>
         <p className="ant-upload-drag-icon">
           <CloudUploadOutlined />

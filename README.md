@@ -63,13 +63,8 @@ To run the server you will also need to provide the `.env` variables
 #### And you are good to go
 
 ```sh
-cd client
-yarn start
-```
-
-```sh
 cd api
-yarn watch:server
+yarn dev
 ```
 
 ```sh

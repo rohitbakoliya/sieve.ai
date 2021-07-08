@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
 export const DashboardWrapper = styled.section`
-  padding-top: 30px;
   min-height: 100%;
   background-color: ${p => p.theme.colors.offwhite};
-  padding-bottom: 30px;
+  padding: 30px 60px;
   button {
     margin: 0 auto;
     display: flex;
@@ -20,9 +19,8 @@ export const DashboardNWrapper = styled.section`
 `;
 
 export const CenterContainer = styled.div`
-  margin: 50px auto;
+  margin-top: 20px;
   padding: 10px;
-  width: 80%;
   box-shadow: ${p => p.theme.shadows.small};
 `;
 

@@ -8,12 +8,12 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreState } from 'store';
 import { ResultsWrapper, RTableContainer } from './Results.style';
-
+import ExportResults from './ExportResults';
 interface RecordType {
   name: string;
   email: string;
   score: number;
-  resumeId: string;
+  resumeLink: string;
   _key: number;
   data: any;
 }
@@ -37,7 +37,11 @@ const columns: ColumnsType<RecordType> = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.score - b.score,
     render: (_, r) => (
-      <Progress strokeColor={{from: '#7d64a7', to: '#b58bdd'}} style={{ paddingLeft: '10px', paddingRight: '10px' }} percent={r.score} />
+      <Progress
+        strokeColor={{ from: '#7d64a7', to: '#b58bdd' }}
+        style={{ paddingLeft: '10px', paddingRight: '10px' }}
+        percent={r.score}
+      />
     ),
     width: '30%',
   },
@@ -46,7 +50,7 @@ const columns: ColumnsType<RecordType> = [
     dataIndex: 'actions',
     render: (_, r) => {
       return (
-        <Tag color="purple" key={r.resumeId}>
+        <Tag color="purple" key={r._key}>
           {r.data.userInfo.predicted}
         </Tag>
       );
@@ -54,9 +58,10 @@ const columns: ColumnsType<RecordType> = [
   },
   {
     title: 'Action',
-    dataIndex: 'viewResume',
+    dataIndex: 'resumeLink',
+    key: 'resumeLink',
     render: (_, r) => (
-      <a href={`${SERVER_URL}/api/pdf/${r.data.userId}/${r.resumeId}`} target="__blank">
+      <a href={r.resumeLink} target="__blank">
         View Resume
       </a>
     ),
@@ -68,7 +73,7 @@ const Leaderboard: React.FC = () => {
   const userId = useSelector((state: StoreState) => state.auth.user?.id);
   const URL = `/api/jobs/${jobId}/results`;
   const [results, isLoading, error] = useFetch(URL);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     if (!results) return;
@@ -79,8 +84,15 @@ const Leaderboard: React.FC = () => {
         score,
         resumeId,
       } = result;
-
-      return { name, email, score, resumeId, _key: idx, data: { ...result, jobId, userId } };
+      const resumeLink = `${SERVER_URL}/api/pdf/${userId}/${resumeId}`;
+      return {
+        name,
+        email,
+        score,
+        _key: idx,
+        resumeLink,
+        data: { ...result },
+      };
     });
     setData(resultsArray);
   }, [results, jobId, userId]);
@@ -90,8 +102,15 @@ const Leaderboard: React.FC = () => {
   return (
     <Layout>
       <ResultsWrapper>
+        <ExportResults data={data} />
         <RTableContainer>
-          <Table columns={columns} loading={isLoading} dataSource={data} rowKey={r => r._key} />
+          <Table
+            pagination={{ defaultPageSize: 8 }}
+            columns={columns}
+            loading={isLoading}
+            dataSource={data}
+            rowKey={r => r._key}
+          />
         </RTableContainer>
       </ResultsWrapper>
     </Layout>

@@ -2,15 +2,18 @@ import styled from 'styled-components';
 
 export const ResultsWrapper = styled.div`
   min-height: 100%;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding: 20px 60px;
 `;
 
 export const RTableContainer = styled.div`
-  width: 80%;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 10px;
-  align-items: center;
   background-color: #fafafa;
   box-shadow: ${p => p.theme.shadows.small};
+`;
+
+export const RButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;

@@ -21,13 +21,14 @@ const columns = [
         ))}
       </>
     ),
+    width: '40%',
   },
   {
     title: 'Job Description',
     key: 'jd',
     dataIndex: 'jd',
     render: jd => (
-      <Text ellipsis={true} style={{ width: '250px' }}>
+      <Text ellipsis={true} style={{ width: '500px' }}>
         {jd}
       </Text>
     ),
@@ -36,11 +37,15 @@ const columns = [
     title: 'Total Candidates',
     key: 'resumeCount',
     dataIndex: 'resumeCount',
+    width: '20%',
+    align: 'right',
   },
   {
     title: 'Action',
     key: 'jobId',
     render: _ => <Link to={`/results/${_.jobId}`}>View Results</Link>,
+    width: '20%',
+    align: 'center',
   },
 ];
 
