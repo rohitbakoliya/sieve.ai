@@ -18,53 +18,14 @@ from joblib import load
 import pickle
 import en_core_web_sm
 nlp = en_core_web_sm.load()
-nltk.download('punkt')
-nltk.download('stopwords')
-
-nlp = en_core_web_sm.load()
-nltk.download('punkt')
-nltk.download('stopwords')
 
 
 app = Flask(__name__)
 cors = CORS(app, supports_credentials=True, resources={
-            r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}})
+            r"/*": {"origins": ["http://localhost:5000"]}})
 
 # cv folder
 app.config['UPLOAD_FOLDER'] = os.path.join('..', 'uploads')
-
-
-###### SAVE TAGS SECTION #############
-
-
-def save_tags(tags):
-    res = []
-    tags = tags.split(",")
-    for tag in tags:
-        temp = tag.strip()
-        res.append(temp)
-    return str(res)
-
-
-@app.route("/save_tags", methods=['POST'])
-def process_save_tags():
-    if request.method == 'POST':
-        my_tags = request.get_json()['tags']
-        return save_tags(my_tags)
-    else:
-        return "Wrong form method"
-######################################
-
-###### UPLOAD CV SECTION #############
-
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    files = request.files.getlist("file")
-    for file in files:
-        file.save(os.path.join(
-            app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-    return 'upload successful'
 
 ######################################
 
@@ -86,7 +47,10 @@ def cleanResume(resumeText):
 def Preprocessfile(filename):
     text = filename
     if ".pdf" in filename:
-        text = textract.process(filename)
+        try:
+            text = textract.process(filename)
+        except UnicodeDecodeError:
+            print('File', filename, 'cannot be extracted! - skipped')
         text = text.decode('utf-8').replace("\\n", " ")
     else:
         text = text.replace("\\n", " ")
@@ -104,38 +68,41 @@ def Preprocessfile(filename):
 
 
 def predictResume(filename):
-    text = textract.process(filename)
-    text = text.decode('utf-8').replace("\\n", " ")
-    text = cleanResume(text)
-    text = [text]
-    text = np.array(text)
-    vectorizer = pickle.load(open("backend algorithm/vectorizer.pickle", "rb"))
-    resume = vectorizer.transform(text)
-    model = load('backend algorithm/model.joblib')
-    result = model.predict(resume)
-    labeldict = {
-        0: 'Arts',
-        1: 'Automation Testing',
-        2: 'Operations Manager',
-        3: 'DotNet Developer',
-        4: 'Civil Engineer',
-        5: 'Data Science',
-        6: 'Database',
-        7: 'DevOps Engineer',
-        8: 'Business Analyst',
-        9: 'Health and fitness',
-        10: 'HR',
-        11: 'Electrical Engineering',
-        12: 'Java Developer',
-        13: 'Mechanical Engineer',
-        14: 'Network Security Engineer',
-        15: 'Blockchain ',
-        16: 'Python Developer',
-        17: 'Sales',
-        18: 'Testing',
-        19: 'Web Designing'
-    }
-    return labeldict[result[0]]
+    try:
+        text = textract.process(filename)
+        text = text.decode('utf-8').replace("\\n", " ")
+        text = cleanResume(text)
+        text = [text]
+        text = np.array(text)
+        vectorizer = pickle.load(open("vectorizer.pickle", "rb"))
+        resume = vectorizer.transform(text)
+        model = load('model.joblib')
+        result = model.predict(resume)
+        labeldict = {
+            0: 'Arts',
+            1: 'Automation Testing',
+            2: 'Operations Manager',
+            3: 'DotNet Developer',
+            4: 'Civil Engineer',
+            5: 'Data Science',
+            6: 'Database',
+            7: 'DevOps Engineer',
+            8: 'Business Analyst',
+            9: 'Health and fitness',
+            10: 'HR',
+            11: 'Electrical Engineering',
+            12: 'Java Developer',
+            13: 'Mechanical Engineer',
+            14: 'Network Security Engineer',
+            15: 'Blockchain ',
+            16: 'Python Developer',
+            17: 'Sales',
+            18: 'Testing',
+            19: 'Web Designing'
+        }
+        return labeldict[result[0]]
+    except UnicodeDecodeError:
+        print('File', filename, 'cannot be extracted for prediction! - skipped')
 
 
 def find_score(jobdes, filename, customKeywords):
@@ -170,7 +137,6 @@ def show_result():
 
     jobdes = Preprocessfile(my_jd)
 
-    # customKeywords = ['spanish', 'hindi', 'opencv']
     customKeywords = []
     for tag in my_tags:
         temp = tag.strip()
@@ -203,4 +169,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=True)
+    app.run()
