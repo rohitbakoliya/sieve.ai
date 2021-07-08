@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  middleware:
+    build: ./middleware
+    image: alcatraz9/seiveai_middleware
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+
+    ports:
+      - "5002:5002"
+
+    volumes: 
+      -  ./middleware:/app/middleware 
+
+    command: ["flask", "run", "--port=5002"]
+
+  webapp:
+    build: ./webapp
+
+    image: alcatraz9/seiveai_webapp
+
+    environment:
+      - NODE_ENV=production
+
+    ports:
+      - '5000:5000'
+
+    volumes: 
+      - ./webapp/uploads:/app/uploads
