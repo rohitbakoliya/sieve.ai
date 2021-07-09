@@ -14,11 +14,13 @@ services:
     volumes: 
       -  ./middleware:/app/middleware 
 
-    command: ["flask", "run", "--port=5002"]
+    command: ["flask", "run", "--port=5002", '--host=0.0.0.0']
 
   webapp:
     build: ./webapp
 
+    depends_on: 
+      - middleware 
     image: alcatraz9/seiveai_webapp
 
     environment:
@@ -29,3 +31,5 @@ services:
 
     volumes: 
       - ./webapp/uploads:/app/uploads
+      - ./webapp/api:/app/api
+      - ./webapp/client:/app/client
